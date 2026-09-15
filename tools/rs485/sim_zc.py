@@ -201,10 +201,15 @@ class Dispenser:
             if cmd == "up" and arg:
                 n = self.nz(int(arg))
                 if n:
-                    n.state = FILLING if n.state == AUTHORIZED else NOZZLE_UP
-                    if n.state == NOZZLE_UP:
-                        n.volume = n.amount = 0.0
-                    print("  [sim] ยกหัวจ่าย %d -> %s" % (n.no, STATE_NAME[n.state]))
+                    if n.state == FILLING:
+                        print("  [sim] หัวจ่าย %d ยกอยู่แล้ว (ไม่ทำอะไร)" % n.no)
+                    else:
+                        if n.state == AUTHORIZED:
+                            n.state = FILLING          # อนุญาตไว้ก่อน แล้วค่อยยก
+                        else:
+                            n.state = NOZZLE_UP        # ยกก่อน รอการอนุญาต
+                            n.volume = n.amount = 0.0
+                        print("  [sim] ยกหัวจ่าย %d -> %s" % (n.no, STATE_NAME[n.state]))
             elif cmd == "down" and arg:
                 n = self.nz(int(arg))
                 if n:
@@ -321,7 +326,10 @@ def main():
                 serve(disp, read_fn, conn.sendall, stop)
             except (BrokenPipeError, OSError, TypeError):
                 pass
-            print("  [sim] การเชื่อมต่อปิด")
+            try:
+                print("  [sim] การเชื่อมต่อปิด")
+            except BrokenPipeError:
+                pass
             conn.close()
     else:
         ap.error("ต้องระบุ --tcp PORT หรือ --pty")

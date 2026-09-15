@@ -1,0 +1,15 @@
+{
+  "name": "udom-pump-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ตัวแทนหัวจ่ายของ UDOM Next — อ่านยอด/สถานะจากตู้จ่ายผ่าน RS-485 และรับคำสั่งสั่งจ่ายจาก PWA",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js config.json",
+    "test": "node test/e2e.js"
+  },
+  "optionalDependencies": {
+    "@supabase/supabase-js": "^2.116.0",
+    "serialport": "^12.0.0"
+  }
+}

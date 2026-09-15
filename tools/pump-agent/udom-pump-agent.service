@@ -1,0 +1,15 @@
+[Unit]
+Description=UDOM Next pump agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/udom-pump-agent
+ExecStart=/usr/bin/node /home/pi/udom-pump-agent/agent.js /home/pi/udom-pump-agent/config.json
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,47 @@
+{
+  "agent_id": "pi-forecourt",
+  "sink": "console",
+
+  "status_poll_ms": 500,
+  "command_poll_ms": 1000,
+  "totalizer_poll_seconds": 300,
+  "heartbeat_seconds": 30,
+  "live_push_ms": 1000,
+  "live_min_litres": 0.01,
+
+  "_supabase": "ตั้ง sink=supabase แล้วกรอก 4 ค่านี้",
+  "supabase_url": "https://<project>.supabase.co",
+  "supabase_anon_key": "<anon key จาก js/config.js ของ UDCS>",
+  "email": "pump-agent@udom.local",
+  "password": "<รหัสผ่านบัญชี role AGENT>",
+
+  "_buses": "หนึ่งเส้น = หนึ่ง baud/framing/codec เท่านั้น บอร์ดที่ใช้ baud ต่างกันต้องแยกเส้น",
+  "buses": [
+    {
+      "id": "bus1",
+      "codec": "sim",
+      "transport": { "kind": "tcp", "host": "127.0.0.1", "port": 5000 },
+      "timeout_ms": 300,
+      "retries": 2,
+      "gap_ms": 20,
+      "boards": [
+        { "addr": 1, "nozzles": [
+          { "code": "diesel_west_front", "nozzle_no": 1 },
+          { "code": "diesel_west_back",  "nozzle_no": 2 }
+        ] }
+      ]
+    },
+    {
+      "id": "bus2-gasohol95",
+      "_note": "ตู้แก๊สโซฮอล์ 95 อาจเป็นบอร์ดคนละรุ่น -> แยกเส้น แยก codec ได้",
+      "codec": "sim",
+      "transport": { "kind": "serial", "port": "/dev/ttyUSB1", "baud": 9600, "framing": "8N1" },
+      "boards": [
+        { "addr": 1, "nozzles": [
+          { "code": "gas95_front", "nozzle_no": 1 },
+          { "code": "gas95_back",  "nozzle_no": 2 }
+        ] }
+      ]
+    }
+  ]
+}
