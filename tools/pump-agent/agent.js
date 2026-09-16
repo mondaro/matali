@@ -331,7 +331,8 @@ module.exports = { PumpAgent, NozzleState };
 if (require.main === module) {
   const cfgPath = process.argv[2] || path.join(__dirname, "config.json");
   const cfg = JSON.parse(fs.readFileSync(cfgPath, "utf8"));
-  const sink = cfg.sink === "supabase" ? require("./sink/supabase")(cfg) : require("./sink/console")(cfg);
+  const SINKS = { udcs: "./sink/udcs", supabase: "./sink/supabase", console: "./sink/console" };
+  const sink = require(SINKS[cfg.sink] || SINKS.console)(cfg);
   const agent = new PumpAgent(cfg, sink);
   const bye = () => { log("กำลังปิด..."); agent.stop(); process.exit(0); };
   process.on("SIGINT", bye);
